@@ -1,0 +1,17 @@
+#!/bin/bash
+# Run any command inside the sandboxed docker environment, e.g.:
+#   docker/run bash              (interactive shell)
+#   docker/run npm test
+# NEVER run python/npm/node directly on the host - always go through this script.
+set -e
+cd "$(dirname "$0")/.."
+IMAGE_TAG=$(echo "local-${PWD##*/}" | tr '[:upper:]' '[:lower:]')
+docker image inspect "$IMAGE_TAG" > /dev/null 2>&1 || docker build docker -t "$IMAGE_TAG"
+# -t/-i only when attached to a terminal, so the script also works from CI/pipes
+TTY_FLAGS=""
+[ -t 0 ] && [ -t 1 ] && TTY_FLAGS="-it"
+docker run --rm --cap-drop=all \
+  -p "${PORT:-8080}:8080" \
+  -v "$PWD:/app" \
+  -v "$PWD/docker:/app/docker:ro" \
+  $TTY_FLAGS "$IMAGE_TAG" "$@"

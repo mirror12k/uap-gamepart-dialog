@@ -1,0 +1,24 @@
+name: build
+
+# Build and test on every push (and on pull requests). The bundle is only kept as a short-lived artifact for inspection:
+# real releases will be published to npm later, so nothing here is meant to persist.
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build and test      # `npm test` builds dist/uap-dialog.js first, then runs the sources and the bundle tests
+        run: npm test
+      - name: Keep the bundle briefly
+        uses: actions/upload-artifact@v4
+        with:
+          name: uap-dialog-bundle
+          path: dist/uap-dialog.js
+          retention-days: 1

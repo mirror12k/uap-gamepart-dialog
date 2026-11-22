@@ -1,0 +1,16 @@
+{
+  "name": "uap-dialog",
+  "version": "0.1.0",
+  "description": "Flag-driven dialog trees: a tiny text format, boolean flag expressions, a stateful Dialog with hooks. Zero dependencies, no rendering.",
+  "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": { ".": "./src/index.js", "./bundle": "./dist/uap-dialog.js" },
+  "files": ["src", "dist", "README.md"],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node scripts/build.js && node --test \"tests/*.test.js\""
+  },
+  "license": "MIT",
+  "dependencies": {}
+}
